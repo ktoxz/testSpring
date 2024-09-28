@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.constant.Constant;
 import com.example.db.CompanyDbUtil;
+import com.example.db.PostDbUtil;
 import com.example.db.UserDbUtil;
 import com.example.model.User;
 import com.example.model.Company;
@@ -35,7 +36,7 @@ public class CompanyController {
         if (company == null) {
             return "redirect:/user/page/login";
         }
-        model.addAttribute("postList", CompanyDbUtil.getInstance().getPosts(company.getId()));
+        model.addAttribute("postList", PostDbUtil.getInstance().getPosts(company.getId()));
         return Constant.COMPANY.POST;
     }
     
@@ -63,7 +64,7 @@ public class CompanyController {
 
         // Gọi hàm trong CompanyDbUtil để lưu bài đăng mới
         try {
-            CompanyDbUtil.getInstance().AddPost(title, description, experience, quantity, address, java.sql.Date.valueOf(deadline), salary, type, category, company.getId(), user.getId());
+            PostDbUtil.getInstance().AddPost(title, description, experience, quantity, address, java.sql.Date.valueOf(deadline), salary, type, category, company.getId(), user.getId());
         } catch (SQLException e) {
             e.printStackTrace();
             model.addAttribute("error", "Lỗi thêm bài đăng, vui lòng thử lại!");

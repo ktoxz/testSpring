@@ -14,25 +14,17 @@ import com.example.model.Role;
 import com.example.model.User;
 
 
-public class UserDbUtil {
-	static Connection myConn = null;
-	private static UserDbUtil ins = null;
-	public List<User> users = null;
-	private static DatabaseManager db;
+public class UserDbUtil extends DatabaseUtil{
 
-	public static UserDbUtil getInstance() {
-		if (ins == null) {
-			ins = new UserDbUtil();
-			try {
-				db = DatabaseManager.getInstance();
-				myConn = db.myConn;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return ins;
-	}
+	public List<User> users = null;
+	private static UserDbUtil ins = null;
+
+    public static UserDbUtil getInstance() {
+        if (ins == null) {
+            ins = new UserDbUtil();
+        }
+        return ins;
+    }
 
 	public List<User> getUsers() throws SQLException {
 		ResultSet myRs = null;
@@ -104,31 +96,9 @@ public class UserDbUtil {
 		return true;
 	}
 
-	public ResultSet askQuery(String query) throws SQLException {
-		System.out.println(query);
-		Statement myStmt = null;
-		ResultSet myRs = null;
-		String sql = query;
-		// System.out.println(myRs);
+	
 
-		myStmt = myConn.createStatement();
-		myRs = myStmt.executeQuery(sql);
 
-		return myRs;
-	}
-
-//	public void DeleteUser(int id) throws SQLException {
-//		PreparedStatement myStmt = null;
-//		String sql = "delete from user where "
-//				+ "id = ?";
-//		myStmt = myConn.prepareStatement(sql);
-//
-//		myStmt.setInt(1, id);
-//
-//		System.out.println(myStmt.toString());
-//		myStmt.execute();
-//
-//	}
 //
 	public void UpdateUser(User user, String fullname, String phonenumber, String email, String address, String description)
 	        throws SQLException {

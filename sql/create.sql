@@ -15,6 +15,12 @@ create table post
 
 );
 
+alter table post
+add apply_count int default 0;
+
+update post
+set apply_count = 0;
+
 CREATE TABLE `company` (
   `id` int NOT NULL AUTO_INCREMENT,
   `address` varchar(255) DEFAULT NULL,
@@ -43,3 +49,27 @@ CREATE TABLE `role` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DELIMITER //
+
+CREATE TRIGGER after_user_insert
+AFTER INSERT ON user
+FOR EACH ROW
+BEGIN
+    -- Check if the new user has role_id = 3
+    IF NEW.role_id = 3 THEN
+        INSERT INTO company (user_id)
+        VALUES (NEW.id);
+    END IF;
+END;
+
+//
+
+DELIMITER ;
+
+create table applicant
+(
+	user_id int references user,
+    company_id int references company,
+    created date default now()
+);

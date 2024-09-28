@@ -2,7 +2,9 @@ package com.example.manager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 public class DatabaseManager {
@@ -26,6 +28,18 @@ public class DatabaseManager {
 			ConnectToDb();
 		}
 		return instance;
+	}
+	
+	public ResultSet askQuery(String query) throws SQLException {
+		System.out.println(query);
+		Statement myStmt = null;
+		ResultSet myRs = null;
+		String sql = query;
+
+		myStmt = myConn.createStatement();
+		myRs = myStmt.executeQuery(sql);
+
+		return myRs;
 	}
 	
 }

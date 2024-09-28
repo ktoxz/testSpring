@@ -14,24 +14,15 @@ import com.example.model.Company;
 import com.example.model.Post;
 import com.example.model.User;
 
-public class CompanyDbUtil {
-	static Connection myConn = null;
+public class CompanyDbUtil extends DatabaseUtil{
 	private static CompanyDbUtil ins = null;
-	private static DatabaseManager db;
 
-	public static CompanyDbUtil getInstance() {
-		if (ins == null) {
-			ins = new CompanyDbUtil();
-			try {
-				db = DatabaseManager.getInstance();
-				myConn = db.myConn;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return ins;
-	}
+    public static CompanyDbUtil getInstance() {
+        if (ins == null) {
+            ins = new CompanyDbUtil();
+        }
+        return ins;
+    }
 	
 	public Company getCompany(int id) throws SQLException {
 		ResultSet myRs = null;
@@ -70,54 +61,5 @@ public class CompanyDbUtil {
 	    }
 	}
 	
-	public void AddPost(String title, String description, String exp, int hire, String address, 
-            Date deadline, double salary, String type, String category, 
-            int companyId, int userId) throws SQLException {
-		String sql = "INSERT INTO post (title, description, exp, hire, address, deadline, salary, type, category, company_id, user_id) "
-		       + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		
-		try (PreparedStatement myStmt = myConn.prepareStatement(sql)) {
-			myStmt.setString(1, title);
-			myStmt.setString(2, description);
-			myStmt.setString(3, exp);
-			myStmt.setInt(4, hire);
-			myStmt.setString(5, address);
-			myStmt.setDate(6, deadline);
-			myStmt.setDouble(7, salary);
-			myStmt.setString(8, type);
-			myStmt.setString(9, category);
-			myStmt.setInt(10, companyId);
-			myStmt.setInt(11, userId);
-			
-			System.out.println(myStmt);
-			myStmt.executeUpdate();
-		}
-	}
-
 	
-	public List<Post> getPosts(int id) throws SQLException {
-		ResultSet myRs = null;
-		String sql = "SELECT * FROM post where company_id = "+id;
-		myRs = askQuery(sql);
-		System.out.println(sql);
-		List<Post> posts = new ArrayList<Post>();
-		while (myRs.next()) {
-			posts.add(new Post(myRs));
-		}
-		return posts;
-
-	}
-	
-	
-	public ResultSet askQuery(String query) throws SQLException {
-		System.out.println(query);
-		Statement myStmt = null;
-		ResultSet myRs = null;
-		String sql = query;
-
-		myStmt = myConn.createStatement();
-		myRs = myStmt.executeQuery(sql);
-
-		return myRs;
-	}
 }
