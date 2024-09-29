@@ -36,7 +36,7 @@ public class CompanyController {
         if (company == null) {
             return "redirect:/user/page/login";
         }
-        model.addAttribute("postList", PostDbUtil.getInstance().getPosts(company.getId()));
+        model.addAttribute("postList", PostDbUtil.getInstance().getPostsByIdList(company.getId()));
         return Constant.COMPANY.POST;
     }
     

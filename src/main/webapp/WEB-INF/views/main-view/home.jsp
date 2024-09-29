@@ -105,7 +105,7 @@
                 <div class="card-body">
                     <h5 class="card-title">${post.title}</h5>
                     <p class="card-text">
-                        <strong>Công ty:</strong> ${post.companyName} <br>
+                        <strong>Công ty:</strong> ${post.companyId} <br>
                         <strong>Địa điểm:</strong> ${post.address} <br>
                         <strong>Lương:</strong> ${post.salary} VNĐ <br>
                         <strong>Loại công việc:</strong> ${post.type} <br>

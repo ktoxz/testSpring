@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.constant.Constant;
 import com.example.db.CompanyDbUtil;
+import com.example.db.PostDbUtil;
 import com.example.db.UserDbUtil;
 import com.example.model.Company;
 import com.example.model.User;
@@ -22,12 +23,13 @@ import jakarta.servlet.http.HttpSession;
 public class MainController {
     
     @RequestMapping("/")
-    public String showPage(HttpSession session, Model model) {
+    public String showPage(HttpSession session, Model model) throws SQLException {
     	User user = (User) session.getAttribute("user");
     	Company company = (Company) session.getAttribute("company");
     	//System.out.println(company)
         model.addAttribute("user", user);
         model.addAttribute("company", company);
+        model.addAttribute("posts", PostDbUtil.getInstance().getRandomPost(3));
     	return Constant.MAIN;
     }
     

@@ -48,17 +48,26 @@ public class PostDbUtil extends DatabaseUtil{
 	}
 
 	
-	public List<Post> getPosts(int id) throws SQLException {
+	public List<Post> getPostsByIdList(int id) throws SQLException {
+		return getPosts("SELECT * FROM post where company_id = "+id);
+	}
+	
+	public List<Post> getRandomPost(int amount) throws SQLException {
+		String query = "Select * from post order by rand()";
+		if(amount != 0) query+=" limit "+amount;
+		return getPosts(query);
+	}
+	
+	public List<Post> getPosts(String query) throws SQLException{
 		ResultSet myRs = null;
-		String sql = "SELECT * FROM post where company_id = "+id;
-		myRs = askQuery(sql);
-		System.out.println(sql);
+		myRs = askQuery(query);
+		System.out.println(query);
 		List<Post> posts = new ArrayList<Post>();
 		while (myRs.next()) {
 			posts.add(new Post(myRs));
 		}
 		return posts;
-
+		
 	}
 	
 	public Post GetPost(int id) throws SQLException {
@@ -119,9 +128,7 @@ public class PostDbUtil extends DatabaseUtil{
 		String 	sql = "delete from post where "
 				+ "id = ?";
 		myStmt = myConn.prepareStatement(sql);
-	
 		myStmt.setInt(1, id);
-	
 		System.out.println(myStmt.toString());
 		myStmt.execute();
 	}
