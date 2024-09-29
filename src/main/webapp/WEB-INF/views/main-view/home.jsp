@@ -53,9 +53,12 @@
                             <c:when test="${not empty company}">
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/company/page/profile">Hồ sơ công ty</a></li>
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/company/page/posts">Danh sách bài đăng</a></li>
+                                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/company/page/requests">Xem đơn ứng tuyển</a></li>
+                                
                             </c:when>
                             <c:otherwise>
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/user/page/profile">Hồ sơ cá nhân</a></li>
+                                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/user/page/requests">Xem đơn ứng tuyển</a></li>
                             </c:otherwise>
                         </c:choose>
                         <li><hr class="dropdown-divider"></li>
@@ -111,7 +114,7 @@
                         <strong>Loại công việc:</strong> ${post.type} <br>
                         <strong>Hạn ứng tuyển:</strong> ${post.deadline} <br>
                     </p>
-                    <a href="<%=request.getContextPath()%>/jobPostings/apply?id=${post.id}" class="btn btn-primary">Ứng tuyển ngay</a>
+                    <a href="<%=request.getContextPath()%>/applicant/request?id=${post.id}" class="btn btn-primary">Ứng tuyển ngay</a>
                 </div>
             </div>
         </c:forEach>

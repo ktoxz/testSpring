@@ -26,7 +26,7 @@ public class CompanyDbUtil extends DatabaseUtil{
 	
 	public Company getCompany(int id) throws SQLException {
 		ResultSet myRs = null;
-		String sql = "SELECT * FROM Company where user_id = "+id;
+		String sql = "SELECT * FROM Company where id = "+id;
 		myRs = askQuery(sql);
 		System.out.println(sql);
 		Company company = null;

@@ -3,6 +3,8 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.constant.Constant;
+import com.example.db.ApplicantDbUtil;
+import com.example.db.PostDbUtil;
 import com.example.db.UserDbUtil;
+import com.example.model.Applicant;
+import com.example.model.Post;
 import com.example.model.User;
 
 import jakarta.servlet.http.HttpSession;
@@ -27,10 +33,28 @@ public class UserController {
     public String showProfilePage(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/user/page/login";
+            return "redirect:/page/login";
         }
         return Constant.USER.PROFILE;
     }
+    
+    @RequestMapping("/page/requests")
+    public String showRequests(HttpSession session, Model model) throws SQLException {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/page/login";
+        }
+        List<Applicant> applicants = ApplicantDbUtil.getInstance().getAppById(user.getId());
+        List<Post> posts = new ArrayList<Post>();
+        for (Applicant x : applicants) {
+        	posts.add(PostDbUtil.getInstance().GetPost(x.getPost().getId()));
+        }
+        model.addAttribute("appliedPosts", posts);
+        
+        return Constant.USER.REQUEST;
+    }
+    
+    
 	
 
     @PostMapping("/update-profile")

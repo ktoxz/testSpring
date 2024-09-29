@@ -25,7 +25,7 @@ public class CompanyController {
     public String showProfilePage(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/user/page/login";
+            return "redirect:/page/login";
         }
         return Constant.COMPANY.PROFILE;
     }
@@ -34,12 +34,20 @@ public class CompanyController {
     public String showPostsPage(HttpSession session, Model model) throws SQLException {
         Company company = (Company) session.getAttribute("company");
         if (company == null) {
-            return "redirect:/user/page/login";
+            return "redirect:/page/login";
         }
         model.addAttribute("postList", PostDbUtil.getInstance().getPostsByIdList(company.getId()));
         return Constant.COMPANY.POST;
     }
     
+    @RequestMapping("/page/requests")
+    public String showRequests(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/page/login";
+        }
+        return Constant.COMPANY.REQUEST;
+    }
     
     @PostMapping("/addJob")
     public String addJob(
@@ -59,7 +67,7 @@ public class CompanyController {
         User user = (User) session.getAttribute("user");
 
         if (company == null) {
-            return "redirect:/user/page/login";
+            return "redirect:/page/login";
         }
 
         // Gọi hàm trong CompanyDbUtil để lưu bài đăng mới

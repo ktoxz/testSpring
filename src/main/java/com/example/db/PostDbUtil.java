@@ -15,7 +15,6 @@ import com.example.model.User;
 
 public class PostDbUtil extends DatabaseUtil{
 	private static PostDbUtil ins = null;
-
     public static PostDbUtil getInstance() {
         if (ins == null) {
             ins = new PostDbUtil();

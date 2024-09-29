@@ -2,6 +2,9 @@ package com.example.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.example.db.CompanyDbUtil;
+
 import java.sql.Date;
 
 public class Post {
@@ -146,5 +149,10 @@ public class Post {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+    
+    public String getCompanyName() throws SQLException {
+    	Company cm = CompanyDbUtil.getInstance().getCompany(companyId);
+    	return cm.getNameCompany();
     }
 }
