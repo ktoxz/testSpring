@@ -13,7 +13,7 @@
     <div class="container">
         <h2 class="mt-4">Danh sách ứng viên ứng tuyển</h2>
         
-        <c:forEach var="candidate" items="${candidates}">
+        <c:forEach var="apply" items="${applies}">
             <div class="card mt-3">
                 <div class="card-body d-flex align-items-center">
                     <!-- Ảnh đại diện -->
@@ -22,16 +22,28 @@
                     </div>
                     <!-- Thông tin ứng viên -->
                     <div class="flex-grow-1">
-                        <h5 class="card-title">${candidate.fullName}</h5>
-                        <p class="card-text">${candidate.email}</p>
+                        <h5 class="card-title">${apply.user.fullName}</h5>
+                        <p class="card-text">${apply.user.email}</p>
                     </div>
                     <!-- Nút xem CV và duyệt -->
-                    <div>
-                        <a href="" class="btn btn-primary mr-2">Xem CV</a>
-                        <button class="btn btn-success">Duyệt</button>
-                    </div>
-                </div>
-            </div>
+                   <c:if test="${apply.isAccept == false}">
+				    <div>
+				        <a href="" class="btn btn-primary mr-2">Xem CV</a>
+				        <!-- Thay thế thẻ button bằng thẻ a để không gây lỗi -->
+				        <a href="<%=request.getContextPath()%>/applicant/pass?id=${apply.userId}&post=${apply.post.id}" class="btn btn-success">Duyệt</a>
+				    </div>
+				</c:if>
+				
+				<c:if test="${apply.isAccept == true}">
+				    <div>
+				        <a href="" class="btn btn-primary mr-2">Xem CV</a>
+				        <!-- Nút "Đã duyệt" bị vô hiệu hóa -->
+				        <button class="btn btn-success" disabled>Đã Duyệt</button>
+				    </div>
+				</c:if>
+	
+	                </div>
+            	</div>
         </c:forEach>
     </div>
 

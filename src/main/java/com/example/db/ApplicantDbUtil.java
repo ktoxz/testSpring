@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.model.Applicant;
+import com.example.model.Company;
 import com.example.model.Post;
 
 public class ApplicantDbUtil extends DatabaseUtil{
@@ -29,7 +30,7 @@ public class ApplicantDbUtil extends DatabaseUtil{
 		myStmt.setInt(1, apply.getUserId());
 		myStmt.setInt(2, apply.getCompanyId());
 		myStmt.setInt(3, apply.getPost().getId());
-		myStmt.setBoolean(4, apply.isAccept());
+		myStmt.setBoolean(4, apply.getIsAccept());
 		System.out.println(myStmt.toString());
 		try {
 			myStmt.execute();
@@ -38,11 +39,6 @@ public class ApplicantDbUtil extends DatabaseUtil{
 			return false;
 		}
 		return true;
-    }
-    
-    public List<Applicant> getAppById(int userId) throws SQLException{
-    	String query = "select * from applicant where user_id = "+userId;
-    	return getApplicants(query);
     }
     
     
@@ -56,6 +52,20 @@ public class ApplicantDbUtil extends DatabaseUtil{
 		}
 		return applicants;
 		
+	}
+	
+	public void AcceptApply(int id, int postID)
+	        throws SQLException {
+	    String sql = "UPDATE applicant "
+	            + "SET accepted = true "
+	            + "WHERE user_id = ? and post_id = ?";
+
+	    try (PreparedStatement myStmt = myConn.prepareStatement(sql)) {
+	        myStmt.setInt(1, id);
+	        myStmt.setInt(2, postID);
+	        System.out.println(myStmt);
+	        myStmt.executeUpdate();
+	    }
 	}
     
 }

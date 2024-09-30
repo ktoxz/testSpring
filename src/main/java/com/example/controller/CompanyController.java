@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.constant.Constant;
+import com.example.db.ApplicantDbUtil;
 import com.example.db.CompanyDbUtil;
 import com.example.db.PostDbUtil;
 import com.example.db.UserDbUtil;
 import com.example.model.User;
+import com.example.model.Applicant;
 import com.example.model.Company;
+import com.example.model.Post;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -41,14 +45,28 @@ public class CompanyController {
     }
     
     @RequestMapping("/page/requests")
-    public String showRequests(HttpSession session) {
+    public String showRequestsPage(HttpSession session, Model model) throws SQLException {
         User user = (User) session.getAttribute("user");
+        Company company = (Company) session.getAttribute("company");
         if (user == null) {
             return "redirect:/page/login";
         }
+        List<Applicant> applies = ApplicantDbUtil.getInstance().getApplicants("Select * from applicant where company_id = "+company.getId());
+        
+        model.addAttribute("applies", applies);
+        
         return Constant.COMPANY.REQUEST;
     }
-    
+//    
+//    @RequestMapping("/page/requests")
+//    public String showRequests(HttpSession session) {
+//        User user = (User) session.getAttribute("user");
+//        if (user == null) {
+//            return "redirect:/page/login";
+//        }
+//        return Constant.COMPANY.REQUEST;
+//    }
+//    
     @PostMapping("/addJob")
     public String addJob(
             HttpSession session,

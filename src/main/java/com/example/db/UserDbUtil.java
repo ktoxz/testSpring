@@ -39,6 +39,19 @@ public class UserDbUtil extends DatabaseUtil{
 		return users;
 
 	}
+	
+	public List<User> getUsers(String sql) throws SQLException {
+		ResultSet myRs = null;
+		myRs = askQuery(sql);
+		System.out.println(sql);
+		users = new ArrayList<>();
+		while (myRs.next()) {
+			User student = new User(myRs);
+			users.add(student);
+		}
+		return users;
+
+	}
 
 	public User getUser(String email) {
 		try {
@@ -50,6 +63,20 @@ public class UserDbUtil extends DatabaseUtil{
 		}
 		for (User x : users)
 			if (x.getEmail() == email)
+				return x;
+		return null;
+	}
+	
+	public User getUser(int id) {
+		try {
+			getUsers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		for (User x : users)
+			if (x.getId() == id)
 				return x;
 		return null;
 	}

@@ -1,6 +1,8 @@
 package com.example.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import com.example.db.CompanyDbUtil;
 import com.example.db.PostDbUtil;
 import com.example.db.UserDbUtil;
 import com.example.model.Company;
+import com.example.model.Post;
 import com.example.model.User;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +35,36 @@ public class MainController {
         model.addAttribute("posts", PostDbUtil.getInstance().getRandomPost(3));
     	return Constant.MAIN;
     }
+    
+    @PostMapping("/search")
+    public String searchPost(@RequestParam("searchType") String searchType,
+                             @RequestParam("searchValue") String searchValue,
+                             Model model) throws SQLException {
+        List<Post> posts = new ArrayList<>();
+        String query = "";
+
+        switch (searchType) {
+            case "title":
+                query = "SELECT * FROM post WHERE title LIKE '%" + searchValue + "%'";
+                break;
+            case "company":
+                query = "SELECT * FROM post WHERE company_id IN (SELECT id FROM company WHERE name LIKE '%" + searchValue + "%')";
+                break;
+            case "location":
+                query = "SELECT * FROM post WHERE address LIKE '%" + searchValue + "%'";
+                break;
+            default:
+                query = "SELECT * FROM post order by rand() limit 4"; 
+                break;
+        }
+
+        posts = PostDbUtil.getInstance().getPosts(query);
+
+        model.addAttribute("posts", posts);
+        return Constant.MAIN;
+    }
+
+
     
     @RequestMapping("/page/login")
     public String showLoginPage() {

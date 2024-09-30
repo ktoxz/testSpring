@@ -44,13 +44,12 @@ public class UserController {
         if (user == null) {
             return "redirect:/page/login";
         }
-        List<Applicant> applicants = ApplicantDbUtil.getInstance().getAppById(user.getId());
-        List<Post> posts = new ArrayList<Post>();
-        for (Applicant x : applicants) {
-        	posts.add(PostDbUtil.getInstance().GetPost(x.getPost().getId()));
-        }
-        model.addAttribute("appliedPosts", posts);
-        
+        List<Post> ACposts = PostDbUtil.getInstance().getPosts("select * from post where id in (SELECT post_id FROM applicant where user_id ="+user.getId()+" and accepted = true)");
+        List<Post> NOTRDposts = PostDbUtil.getInstance().getPosts("select * from post where id in (SELECT post_id FROM applicant where user_id ="+user.getId()+" and accepted = false)");
+
+        model.addAttribute("ACappliedPosts", ACposts);
+        model.addAttribute("NOTRDappliedPosts", NOTRDposts);
+
         return Constant.USER.REQUEST;
     }
     

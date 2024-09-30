@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpSession;
 public class ApplicantController {
 	@RequestMapping("/request")
 	public String ApplyRequest(@RequestParam("id") int id, HttpSession session) throws SQLException {
-		
     	User user = (User) session.getAttribute("user");
     	if(user == null) {
     		return "redirect:/page/login";
@@ -29,5 +28,26 @@ public class ApplicantController {
     	Applicant apply = new Applicant(user.getId(), post);
     	ApplicantDbUtil.getInstance().RequestApply(apply);
 		return "redirect:/";
+	}
+	
+	@RequestMapping("/pass")
+	public String PassRequest(@RequestParam("id") int id,
+							  @RequestParam("post") int postId,
+							  HttpSession session) throws SQLException {
+		
+    	User user = (User) session.getAttribute("user");
+    	if(user == null) {
+    		return "redirect:/page/login";
+    	} else if(user.getRoleId() == 1) {
+    		return "redirect:/";
+    	}
+    	
+    	
+    	ApplicantDbUtil.getInstance().AcceptApply(id, postId);
+    	
+    	
+		
+		return "redirect:/company/page/requests";
+		
 	}
 }

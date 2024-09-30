@@ -54,7 +54,6 @@
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/company/page/profile">Hồ sơ công ty</a></li>
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/company/page/posts">Danh sách bài đăng</a></li>
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/company/page/requests">Xem đơn ứng tuyển</a></li>
-                                
                             </c:when>
                             <c:otherwise>
                                 <li><a class="dropdown-item" href="<%=request.getContextPath()%>/user/page/profile">Hồ sơ cá nhân</a></li>
@@ -76,48 +75,78 @@
         </div>
     </c:if>
 
-    <!-- Search form -->
-    <form action="<%=request.getContextPath()%>/jobPostings/search" method="post" class="mt-4">
-        <div class="row">
-            <div class="col-md-4">
-                <label for="jobTitle" class="form-label">Tiêu đề công việc:</label>
-                <input type="text" id="jobTitle" name="jobTitle" class="form-control" placeholder="Nhập tiêu đề công việc">
+    <!-- Search form with dropdown -->
+    <div class="mt-4">
+        <h4>Tìm kiếm công việc</h4>
+        <form action="<%=request.getContextPath()%>/search" method="post" class="mt-3">
+            <div class="mb-3">
+                <label for="searchType" class="form-label">Tìm kiếm theo:</label>
+                <select id="searchType" name="searchType" class="form-select" required>
+                    <option value="" disabled selected>Chọn loại tìm kiếm</option>
+                    <option value="title">Tiêu đề công việc</option>
+                    <option value="company">Tên công ty</option>
+                    <option value="location">Địa điểm</option>
+                </select>
             </div>
-
-            <div class="col-md-4">
-                <label for="companyName" class="form-label">Tên công ty:</label>
-                <input type="text" id="companyName" name="companyName" class="form-control" placeholder="Nhập tên công ty">
+            <div class="mb-3">
+                <label for="searchValue" class="form-label">Giá trị tìm kiếm:</label>
+                <input type="text" id="searchValue" name="searchValue" class="form-control" placeholder="Nhập giá trị tìm kiếm" required>
             </div>
-
-            <div class="col-md-4">
-                <label for="location" class="form-label">Địa điểm:</label>
-                <input type="text" id="location" name="location" class="form-control" placeholder="Nhập địa điểm">
-            </div>
-        </div>
-
-        <div class="text-center mt-4">
             <button type="submit" class="btn btn-success">Tìm kiếm</button>
-        </div>
-    </form>
+        </form>
+    </div>
 
     <!-- Job Listings (You can dynamically display jobs here using c:forEach) -->
     <div class="job-listings mt-5">
         <h4>Các công việc hiện có:</h4>
         <c:forEach var="post" items="${posts}">
-            <div class="card my-3">
-                <div class="card-body">
-                    <h5 class="card-title">${post.title}</h5>
-                    <p class="card-text">
-                        <strong>Công ty:</strong> ${post.companyId} <br>
-                        <strong>Địa điểm:</strong> ${post.address} <br>
-                        <strong>Lương:</strong> ${post.salary} VNĐ <br>
-                        <strong>Loại công việc:</strong> ${post.type} <br>
-                        <strong>Hạn ứng tuyển:</strong> ${post.deadline} <br>
-                    </p>
-                    <a href="<%=request.getContextPath()%>/applicant/request?id=${post.id}" class="btn btn-primary">Ứng tuyển ngay</a>
-                </div>
-            </div>
-        </c:forEach>
+		    <div class="card my-3">
+		        <div class="card-body">
+		            <h5 class="card-title">${post.title}</h5>
+		            <p class="card-text">
+		                <strong>Công ty:</strong> ${post.companyId} <br>
+		                <strong>Địa điểm:</strong> ${post.address} <br>
+		                <strong>Lương:</strong> ${post.salary} VNĐ <br>
+		                <strong>Loại công việc:</strong> ${post.type} <br>
+		                <strong>Hạn ứng tuyển:</strong> ${post.deadline} <br>
+		            </p>
+		            <!-- Nút Ứng tuyển ngay nếu không có công ty -->
+		            <c:if test="${empty company}">
+		                <a href="<%=request.getContextPath()%>/applicant/request?id=${post.id}" class="btn btn-primary">Ứng tuyển ngay</a>
+		            </c:if>
+		            <!-- Nút Xem chi tiết -->
+		            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#jobDetailModal${post.id}">
+		                Xem chi tiết
+		            </button>
+		
+		            <!-- Modal -->
+		            <div class="modal fade" id="jobDetailModal${post.id}" tabindex="-1" aria-labelledby="jobDetailModalLabel" aria-hidden="true">
+		                <div class="modal-dialog">
+		                    <div class="modal-content">
+		                        <div class="modal-header">
+		                            <h5 class="modal-title" id="jobDetailModalLabel">${post.title}</h5>
+		                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		                        </div>
+		                        <div class="modal-body">
+		                            <strong>Mô tả:</strong> ${post.description} <br>
+		                            <strong>Kinh nghiệm:</strong> ${post.exp} <br>
+		                            <strong>Số lượng tuyển:</strong> ${post.hire} <br>
+		                            <strong>Địa chỉ:</strong> ${post.address} <br>
+		                            <strong>Hạn ứng tuyển:</strong> ${post.deadline} <br>
+		                            <strong>Lương:</strong> ${post.salary} VNĐ <br>
+		                            <strong>Loại công việc:</strong> ${post.type} <br>
+		                            <strong>Danh mục:</strong> ${post.category} <br>
+		                        </div>
+		                        <div class="modal-footer">
+		                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</c:forEach>
+
     </div>
 </div>
 
